@@ -24,17 +24,18 @@
 let tttGame = (function(){
 
     //Cache DOM Elements
-    $body = document.querySelector("body");
 
-    //If player = true, game will prompt to "Player 1" and drop an "X".
+    //If firstPlayer = true, game will prompt to "Player 1" and drop an "X".
     //False will prompt to "Player 2" and drop an "O"
     let firstPlayer = true;
-    let boardSpace = [];
-    let player_1 = new Player("Player_1", "X");
-    let player_2 = new Player("Player_2", "O");
-    let activePlayer;
     let gameOver = false;
-    //New Player Constructor. Will eventually be able to prompt for name and token.
+    let player_1;
+    let player_2;
+    let activePlayer;
+    let boardSpace = [];
+
+
+    //New Player Constructor. Prompt for these values to be implemented in newBoard function.
 
     function Player(name, token) {
         this.name = name;
@@ -47,7 +48,7 @@ let tttGame = (function(){
     //winner is declared and play again prompt shows.
     function game(){
         newBoard();
-
+        playerCreate();
         render();
 
         while(!gameOver){
@@ -75,7 +76,31 @@ let tttGame = (function(){
         }
         return 1;
     }
+
+    //Player prompts for name and token
+    function playerCreate(){
+        console.log("Welcome to Tic-Tac-Toe Game! \n Please enter player names and select a token");
+        player_1 = new Player();
+        player_2 = new Player();
+        player_1.name = prompt("Player_1, please choose a name.");
+        player_1.token = prompt("Player_1, please choose a single-character token");
+        tokenCheck(player_1);
+        player_2.name = prompt("Player_2, please choose a name.");
+        player_2.token = prompt("Player_2, please choose a token");
+        tokenCheck(player_2);
+        console.clear();
+        return 1;
+    }
     
+
+    //Verify only a single character is used for a player's token.
+    function tokenCheck(player){
+            while(player.token.length != 1){
+                console.log(`${player.name}, the token must be a single character`);
+                player.token = prompt(`${player.name}, try choosing your token again.`)
+            }
+        return 1;
+    }
 
     //Reads firstPlayer status and sets activePlayer
     function turnCheck(){
@@ -85,12 +110,16 @@ let tttGame = (function(){
         return 1;
     }
 
+    function winCheck(){
+
+    }
+
     //get player input and validate
     function promptInput(){
         let input;
 
         console.log(`${activePlayer.name}, please enter a location for your token.:`);
-        input = Number(prompt(`${activePlayer.name},Where do you want to set a token? (1-9)`));
+        input = Number(prompt(`${activePlayer.name}, where do you want to set a token? (1-9)`));
         validateInput(input);
     }
     
