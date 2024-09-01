@@ -1,6 +1,6 @@
 /*TIC TAC TOE GAME
 --Components--
--Players
+-Player
     -Turn Based?
 -Board
 -Rounds
@@ -28,22 +28,40 @@ let tttGame = (function(){
 
     //If player = true, game will prompt to "Player 1" and drop an "X".
     //False will prompt to "Player 2" and drop an "O"
-    let player = true;
+    let firstPlayer = true;
     let boardSpace = [];
-    let currentPlayer;
+    let player_1 = new Player("Player_1", "X");
+    let player_2 = new Player("Player_2", "O");
+    let activePlayer;
+    let gameOver = false;
+    //New Player Constructor. Will eventually be able to prompt for name and token.
 
+    function Player(name, token) {
+        this.name = name;
+        this.token = token;
+      }
+
+    
     //Generates a new, blank, board and initiates the game.
     //Play continues until desired round score is met .
     //winner is declared and play again prompt shows.
     function game(){
         newBoard();
+
         render();
+
+        while(!gameOver){
+            turnCheck();
+            promptInput();
+            // winCheck();
+
+        }
     }
 
-    //REQUIRES creation of players and corresponding token style
+    //REQUIRES creation of Player and corresponding token style
     //Checks validity of player input and then iterates through boardspace.
     //If match is found, relevant board space will be replaced by
-    //the current players token. Returns 1 or 0 for selection function.
+    //the current Player token. Returns 1 or 0 for selection function.
 
     function newBoard(){
         let count = 0;
@@ -57,40 +75,46 @@ let tttGame = (function(){
         }
         return 1;
     }
+    
 
-    //Check that player input is between 1-9 (a valid game square) and then matches
-    //the input with the valid index and replace the value with player token.
-    //Returns 0 or 1 to promptInput() for assessment.
+    //Reads firstPlayer status and sets activePlayer
+    function turnCheck(){
+        if(firstPlayer) activePlayer = player_1;
+        else activePlayer = player_2;
 
-    function convertInput(input){
-
-        if (typeof input === "number" && 0 < input < 10){
-            for (let i = 0; i < boardSpace.length; i++){
-                for (let j = 0; j < boardSpace[i].length; j++){
-                    if (boardSpace[i][j] === `[${input}]`)
-                        boardSpace[i][j] = `[${player.token}]`;
-                        return 1;}
-            }}
-        else {
-            console.log("Invalid input.\n Please enter a value between 1-9\n that is still available on the board.");
-            return 0;
-        }
+        return 1;
     }
 
-    
+    //get player input and validate
     function promptInput(){
-
         let input;
 
-        console.log(`Please enter a location for your token.:`);
-        input = Number(prompt(`Where do you want to set a token? (1-9)`));
-        console.log(`You input ${input}. This is a ${typeof input}`);
-
-        // if (convertInput(input)){
-
-        // }
+        console.log(`${activePlayer.name}, please enter a location for your token.:`);
+        input = Number(prompt(`${activePlayer.name},Where do you want to set a token? (1-9)`));
+        validateInput(input);
     }
     
+
+    //Attempts to match input to a location within boardSpace. If successful
+    //the number at the location will be replaced with player token and will return 1.
+
+    function validateInput(input){
+            for (let i = 0; i < boardSpace.length; i++){
+                for (let j = 0; j < boardSpace[i].length; j++){
+                    if (boardSpace[i][j] === `[${input}]` && boardSpace[i][j] != player_1.token && boardSpace[i][j] != player_2.token){
+                        boardSpace[i][j] = `[${activePlayer.token}]`;
+                        console.clear();
+                        render();
+                        console.log(`You set a token at "${input}".`);
+                        firstPlayer = !firstPlayer;
+                        return 1;
+                    }
+                }
+            }
+            console.log("Invalid input.\n Please enter a value between 1-9\n that is still available on the board.");
+            return 0;
+    }
+
 
     //Prints out boardSpace to console
     function render(){
@@ -99,10 +123,10 @@ let tttGame = (function(){
         }
     }
 
+
     //methods available to user
     return{
-        start:game,
-        prompt:promptInput
+        start:game
     };
 
 })();
