@@ -24,7 +24,7 @@
 let tttGame = (function(){
 
     //Cache DOM Elements
-    
+    $body = document.querySelector("body");
 
     //If player = true, game will prompt to "Player 1" and drop an "X".
     //False will prompt to "Player 2" and drop an "O"
@@ -58,30 +58,39 @@ let tttGame = (function(){
         return 1;
     }
 
-    // function convertInput(input){
+    //Check that player input is between 1-9 (a valid game square) and then matches
+    //the input with the valid index and replace the value with player token.
+    //Returns 0 or 1 to promptInput() for assessment.
 
-    //     if (typeof input === "number" && 0 < input < 10){
-    //         for (let i = 0; i < boardSpace.length; i++){
-    //             for (let j = 0; j < boardSpace[i].length; j++){
-    //                 if (boardSpace[i][j] === `[${input}]`)
-    //                     boardSpace[i][j] = `${player.token}`;
-    //                     return 1;}
-    //         }}
-    //     else {
-    //         console.log("Invalid input.\n Please enter a value between 1-9\n that is still available on the board.");
-    //         return 0;
-    //     }
-    // };
+    function convertInput(input){
+
+        if (typeof input === "number" && 0 < input < 10){
+            for (let i = 0; i < boardSpace.length; i++){
+                for (let j = 0; j < boardSpace[i].length; j++){
+                    if (boardSpace[i][j] === `[${input}]`)
+                        boardSpace[i][j] = `[${player.token}]`;
+                        return 1;}
+            }}
+        else {
+            console.log("Invalid input.\n Please enter a value between 1-9\n that is still available on the board.");
+            return 0;
+        }
+    }
 
     
-    // function promptInput(){
-    //     console.log(`${currentPlayer}. Please enter a location for your token.:`);
-    //     let input = window.addEventListener("keydown", (event) => {
-    //           input = event;
-    //     });
-    //     console.log(`you chose ${input}`);
-    //     return;
-    // };
+    function promptInput(){
+
+        let input;
+
+        console.log(`Please enter a location for your token.:`);
+        input = Number(prompt(`Where do you want to set a token? (1-9)`));
+        console.log(`You input ${input}. This is a ${typeof input}`);
+
+        // if (convertInput(input)){
+
+        // }
+    }
+    
 
     //Prints out boardSpace to console
     function render(){
@@ -92,7 +101,8 @@ let tttGame = (function(){
 
     //methods available to user
     return{
-        start:game
+        start:game,
+        prompt:promptInput
     };
 
 })();
