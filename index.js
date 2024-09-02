@@ -1,32 +1,11 @@
-/*TIC TAC TOE GAME
---Components--
--Player
-    -Turn Based?
--Board
--Rounds
--Score
--Win
-
---Methods--
--Cache DOM Elements
--Bind DOM Elements to Events
--StartGame/GenerateBoard
--Turn/Select mark location
--Score/Check current round status ie 3 in a row?
--Round/ 3 in a row? update score and new round
--EndGame/score checker to end game
-*/
-
-//create board is complete.  Need: method to replace areas of board.
-//along with a method to 'refresh' the board after a choice was made.
+/*TIC TAC TOE GAME*/
 
 //Game Module 
 let tttGame = (function(){
 
-    //Cache DOM Elements
 
-    //If firstPlayer = true, game will prompt to "Player 1" and drop an "X".
-    //False will prompt to "Player 2" and drop an "O"
+    //If firstPlayer = true, game will prompt to "Player 1".
+    //False will prompt to "Player 2".
     let firstPlayer = true;
     let gameOver = false;
     let player_1;
@@ -35,7 +14,7 @@ let tttGame = (function(){
     let boardSpace = [];
 
 
-    //New Player Constructor. Prompt for these values to be implemented in newBoard function.
+    //New Player Constructor.
 
     function Player(name, token) {
         this.name = name;
@@ -44,8 +23,8 @@ let tttGame = (function(){
 
     
     //Generates a new, blank, board and initiates the game.
-    //Play continues until desired round score is met .
-    //winner is declared and play again prompt shows.
+    //Play continues until a player makes 3 in a row or all spaces are used.
+    //winner or draw is declared. No play again function implemented.
     function game(){
         refresh();
         newBoard();
@@ -69,11 +48,7 @@ let tttGame = (function(){
         boardSpace = [];
     }
 
-    //REQUIRES creation of Player and corresponding token style
-    //Checks validity of player input and then iterates through boardspace.
-    //If match is found, relevant board space will be replaced by
-    //the current Player token. Returns 1 or 0 for selection function.
-
+    //New blank board.
     function newBoard(){
         let count = 0;
         for (let i = 0; i < 3; i++){
@@ -102,7 +77,6 @@ let tttGame = (function(){
         return 1;
     }
     
-
     //Verify only a single character is used for a player's token.
     function tokenCheck(player){
             while(player.token.length != 1){
@@ -120,7 +94,8 @@ let tttGame = (function(){
         return 1;
     }
 
-    //Looked into various methods on implementing a win check and settled on using a "magic square".
+    //Implement a"magic square" based win check. This could scale with different size boards
+    //but has not been coded to do so.
     function winCheck(){
         const magicSquare =[
             [2,7,6],
@@ -169,7 +144,7 @@ let tttGame = (function(){
     
 
     //Attempts to match input to a location within boardSpace. If successful
-    //the number at the location will be replaced with player token and will return 1.
+    //the number at the location will be replaced with player token.
 
     function validateInput(input){
             for (let i = 0; i < boardSpace.length; i++){
