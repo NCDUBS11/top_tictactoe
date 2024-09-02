@@ -143,16 +143,16 @@ let tttGame = (function(){
                 } 
             }
         }
-        if(totalTokens === 9){
-            console.log("The game has ended in a draw!");
-            gameOver = true;
-        }
-        else if (player1Score === 15){
+        if (player1Score === 15){
             console.log(`${player_1.name}, you've won the game. \n Congratulations!`)
             gameOver = true;
         }
         else if (player2Score === 15){
             console.log(`${player_2.name}, you've won the game. \n Congratulations!`)
+            gameOver = true;
+        }
+        else if(totalTokens === 9){
+            console.log("The game has ended in a draw!");
             gameOver = true;
         }
         return 1;

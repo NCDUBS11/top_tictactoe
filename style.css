@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Nerko+One&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+:root{
+    --ff-regular: "Roboto";
+    --ff-alt: "Nerko One";
+    --fc-regular: rgb(236, 236, 236);
+    --fc-error: rgb(255, 0, 0);
+    --fs-regular: clamp(1rem, 0.5rem + 2vw, 1.3rem);
+    --fs-large: clamp(1.5rem, 0.6rem + 2.5vw, 1.75rem);    
+    --fs-xlarge: clamp(1.5rem, 0.6rem + 3vw, 2.25rem);
+    --fs-xxlarge: clamp(2.5rem, 0.8rem + 5vw, 5rem);
+    --fw-thin: 300;
+    --fw-regular: 400;
+    --fw-bold: 600;
+    --bg-color: rgba(49, 49, 49, 0.5);
+    --bg-color-dark: rgba(26, 25, 25, 0.4);
+    --bg-actColor:rgba(117, 116, 116, 0.4);
+    --brdr-color: rgb(221, 221, 221);
+}
+
+*{
+    font-family: var(--ff-regular), 'Times New Roman', serif;    
+    font-size: var(--fc-regular);
+    font-weight: var(--fw-regular);
+    color: var(--fc-regular);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-sizing: border-box;
+}
+
+
+body{
+    min-height: 100vh;
+    background-image: radial-gradient(rgba(0, 0, 0, 10%),rgba(0, 0, 0, 90%)) ,url("./abstract-bg.jpg");
+    background-position: center;
+    background-size: cover;
+    position: relative;
+}
+
+.container{
+    background-color: var(--bg-color);
+    backdrop-filter: blur(5px);
+    border: 3px solid var(--brdr-color);
+    max-width: 1000px;
+    padding-inline: 2rem;
+    padding-block: 2rem;
+    display: grid;
+    gap: 1.5rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.title{
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-xlarge);
+    justify-self: center;
+    align-self: center;
+}
+
+.gameBoard{
+    font-weight: var(--fw-regular);
+    font-size: var(--fs-xlarge);
+    justify-self: center;
+    align-self: center;
+    padding: 0.5rem;
+    display: grid;
+    grid-template-rows: repeat(3,1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    overflow: hidden;
+}
+
+.boardSpace{
+    aspect-ratio: 1/1;
+    min-width: var(--fs-xlarge);
+    text-align: center;
+    margin-inline: auto;
+    position: relative;
+}
+
+.boardSpace::before,
+.boardSpace::after{
+    content: "";
+    position: absolute;
+    background-color: var(--fc-regular);
+    z-index: 1;
+
+}
+
+.boardSpace::after {
+    inline-size: 100vw;
+    block-size: 2px;
+    inset-inline-start: 0;
+    inset-block-start: -1rem;
+  }
+
+.boardSpace::before{
+    inline-size: 2px;
+    block-size: 100vh;
+    inset-inline-start: -1rem;
+    inset-block-start: 0;
+}
