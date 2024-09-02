@@ -47,6 +47,7 @@ let tttGame = (function(){
     //Play continues until desired round score is met .
     //winner is declared and play again prompt shows.
     function game(){
+        refresh();
         newBoard();
         playerCreate();
         render();
@@ -54,9 +55,18 @@ let tttGame = (function(){
         while(!gameOver){
             turnCheck();
             promptInput();
-            // winCheck();
-
+            winCheck();
         }
+    }
+
+
+    //Ran into issues where boardSpace and gameOver held previous states during testing.
+    //Adding refresh to start of new game to ensure a clean start.
+    function refresh(){
+        console.clear();
+        firstPlayer = true;
+        gameOver = false;
+        boardSpace = [];
     }
 
     //REQUIRES creation of Player and corresponding token style
@@ -110,8 +120,42 @@ let tttGame = (function(){
         return 1;
     }
 
+    //Looked into various methods on implementing a win check and settled on using a "magic square".
     function winCheck(){
+        const magicSquare =[
+            [2,7,6],
+            [9,5,1],
+            [4,3,8]
+        ];
+        let totalTokens = 0;
+        let player1Score = 0;
+        let player2Score = 0;
 
+        for (let i = 0; i < boardSpace.length; i++){
+            for (let j = 0; j < boardSpace[i].length; j++){
+                if (boardSpace[i][j] === `[${player_1.token}]`){
+                    player1Score += magicSquare[i][j];
+                    ++totalTokens;
+                }
+                else if (boardSpace[i][j] === `[${player_2.token}]`){
+                    player2Score += magicSquare[i][j];
+                    ++totalTokens;
+                } 
+            }
+        }
+        if(totalTokens === 9){
+            console.log("The game has ended in a draw!");
+            gameOver = true;
+        }
+        else if (player1Score === 15){
+            console.log(`${player_1.name}, you've won the game. \n Congratulations!`)
+            gameOver = true;
+        }
+        else if (player2Score === 15){
+            console.log(`${player_2.name}, you've won the game. \n Congratulations!`)
+            gameOver = true;
+        }
+        return 1;
     }
 
     //get player input and validate
