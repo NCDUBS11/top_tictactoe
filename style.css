@@ -90,6 +90,10 @@ body{
 
 }
 
+/* img{
+    width: fit-content;
+} */
+
 .boardSpace::after {
     inline-size: 100vw;
     block-size: 2px;
