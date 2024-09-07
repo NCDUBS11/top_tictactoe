@@ -24,6 +24,15 @@
 let tttGame = (function(){
 
     //Cache DOM Elements
+    const gameBoard = document.querySelector(".gameBoard");
+    const startScreen = document.querySelector(".startScreen");
+    const gameOverScreen = document.querySelector(".gameOverScreen");
+    // const startBtn = document.querySelector(".startBtn");
+    // const gameOverBtn = document.querySelector(".gameOverBtn");
+
+    //events
+    // startBtn.addEventListener("click", game());
+    // gameOverBtn.addEventListener("click", game());
 
     //If firstPlayer = true, game will prompt to "Player 1" and drop an "X".
     //False will prompt to "Player 2" and drop an "O"
@@ -48,32 +57,28 @@ let tttGame = (function(){
     //winner is declared and play again prompt shows.
     function game(){
         refresh();
-        newBoard();
         playerCreate();
+        turnCheck();
         render();
-
-        while(!gameOver){
-            turnCheck();
-            promptInput();
-            winCheck();
-        }
     }
 
 
     //Ran into issues where boardSpace and gameOver held previous states during testing.
     //Adding refresh to start of new game to ensure a clean start.
     function refresh(){
-        console.clear();
+        startScreen.style.display = "block";
+        gameOverScreen.style.display = "none";
+        gameBoard.style.display = "none";
+        // console.clear();
         firstPlayer = true;
         gameOver = false;
+        gameBoard.innerHTML = '';
         boardSpace = [];
+        newBoard();
     }
 
-    //REQUIRES creation of Player and corresponding token style
-    //Checks validity of player input and then iterates through boardspace.
-    //If match is found, relevant board space will be replaced by
-    //the current Player token. Returns 1 or 0 for selection function.
 
+    //generates a new board
     function newBoard(){
         let count = 0;
         for (let i = 0; i < 3; i++){
@@ -98,10 +103,9 @@ let tttGame = (function(){
         player_2.name = prompt("Player_2, please choose a name.");
         player_2.token = prompt("Player_2, please choose a token");
         tokenCheck(player_2);
-        console.clear();
+        // console.clear();
         return 1;
     }
-    
 
     //Verify only a single character is used for a player's token.
     function tokenCheck(player){
@@ -114,9 +118,12 @@ let tttGame = (function(){
 
     //Reads firstPlayer status and sets activePlayer
     function turnCheck(){
-        if(firstPlayer) activePlayer = player_1;
-        else activePlayer = player_2;
-
+        if(firstPlayer){
+            activePlayer = player_1;
+        }
+        else {
+            activePlayer = player_2;
+        }
         return 1;
     }
 
@@ -134,39 +141,48 @@ let tttGame = (function(){
         for (let i = 0; i < boardSpace.length; i++){
             for (let j = 0; j < boardSpace[i].length; j++){
                 if (boardSpace[i][j] === `[${player_1.token}]`){
-                    player1Score += magicSquare[i][j];
+                    player1Score += Number(magicSquare[i][j]);
                     ++totalTokens;
                 }
                 else if (boardSpace[i][j] === `[${player_2.token}]`){
-                    player2Score += magicSquare[i][j];
+                    player2Score += Number(magicSquare[i][j]);
                     ++totalTokens;
                 } 
             }
         }
         if (player1Score === 15){
-            console.log(`${player_1.name}, you've won the game. \n Congratulations!`)
+            console.log(`${player_1.name}, you've won the game. \n Congratulations!`);
+            gameBoard.style.display = "none";
+            gameOverScreen.style.display = "block";
+            gameOverScreen.innerText = `${player_1.name}, you've won the game. \n Congratulations!`;
             gameOver = true;
         }
         else if (player2Score === 15){
-            console.log(`${player_2.name}, you've won the game. \n Congratulations!`)
+            console.log(`${player_2.name}, you've won the game. \n Congratulations!`);            gameBoard.style.display = "none";
+            gameOverScreen.style.display = "block";
+            gameOverScreen.innerText = `${player_1.name}, you've won the game. \n Congratulations!`;
             gameOver = true;
         }
         else if(totalTokens === 9){
             console.log("The game has ended in a draw!");
+            gameBoard.style.display = "none";
+            gameOverScreen.style.display = "block";
+            gameOverScreen.innerText = "The game has ended in a draw!";
             gameOver = true;
         }
         return 1;
     }
 
     //get player input and validate
-    function promptInput(){
-        let input;
+    //**THIS WAS REMOVED. INPUT PROMPTED VIA LISTENERS ON BOARD PIECES**
+    // function promptInput(){
+    //     let input;
 
-        console.log(`${activePlayer.name}, please enter a location for your token.:`);
-        input = Number(prompt(`${activePlayer.name}, where do you want to set a token? (1-9)`));
-        validateInput(input);
-    }
-    
+    //     console.log(`${activePlayer.name}, please enter a location for your token.:`);
+    //     input = Number(prompt(`${activePlayer.name}, where do you want to set a token? (1-9)`));
+    //     validateInput(input);
+    // }
+    //******************************************
 
     //Attempts to match input to a location within boardSpace. If successful
     //the number at the location will be replaced with player token and will return 1.
@@ -176,30 +192,66 @@ let tttGame = (function(){
                 for (let j = 0; j < boardSpace[i].length; j++){
                     if (boardSpace[i][j] === `[${input}]` && boardSpace[i][j] != player_1.token && boardSpace[i][j] != player_2.token){
                         boardSpace[i][j] = `[${activePlayer.token}]`;
-                        console.clear();
-                        render();
+                        // console.clear();
+                        consoleRender();
                         console.log(`You set a token at "${input}".`);
                         firstPlayer = !firstPlayer;
                         return 1;
                     }
                 }
             }
-            console.log("Invalid input.\n Please enter a value between 1-9\n that is still available on the board.");
+            console.log(input);
+            consoleRender();
+            console.log("Invalid input.\nPlease enter a value between 1-9\nthat is still available on the board.");
             return 0;
     }
 
 
-    //Prints out boardSpace to console
+    // Prints out boardSpace to console
+    // function render(){
+    //     for(let i = 0; i < boardSpace.length; i++){
+    //         console.log(boardSpace[i]);
+    //     }
+    // }
+
     function render(){
+        let tempNum = 0
+        for(let i = 0; i < boardSpace.length; i++){
+            for(let j = 0; j < boardSpace[i].length; j++){
+                ++tempNum;
+                const boardSquare = document.createElement("div");
+                boardSquare.setAttribute("id", `${tempNum}`);
+                boardSquare.setAttribute("class", "boardSquare");
+                boardSquare.addEventListener("click", ()=>{
+                    const input = Number(boardSquare.id);
+                    if(validateInput(input)){
+                        boardSquare.innerText = `${activePlayer.token}`;
+                        winCheck();
+                        turnCheck();
+                    }
+                });
+                gameBoard.appendChild(boardSquare);                
+            }
+        }
+        startScreen.style.display = "none";
+        gameOverScreen.style.display = "none";
+        gameBoard.style.display = "grid";
+
+    }
+
+    function consoleRender(){
+        console.clear();
         for(let i = 0; i < boardSpace.length; i++){
             console.log(boardSpace[i]);
         }
     }
 
 
-    //methods available to user
+    // methods available to user
     return{
         start:game
     };
 
 })();
+
+

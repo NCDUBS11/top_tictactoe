@@ -7,7 +7,7 @@
     --fc-error: rgb(255, 0, 0);
     --fs-regular: clamp(1rem, 0.5rem + 2vw, 1.3rem);
     --fs-large: clamp(1.5rem, 0.6rem + 2.5vw, 1.75rem);    
-    --fs-xlarge: clamp(1.5rem, 0.6rem + 3vw, 2.25rem);
+    --fs-xlarge: clamp(1.5rem, 0.6rem + 3vw, 2.5rem);
     --fs-xxlarge: clamp(2.5rem, 0.8rem + 5vw, 5rem);
     --fw-thin: 300;
     --fw-regular: 400;
@@ -42,6 +42,7 @@ body{
     background-color: var(--bg-color);
     backdrop-filter: blur(5px);
     border: 3px solid var(--brdr-color);
+    border-radius: 5px;
     min-width: 250px;
     max-width: 1000px;
     padding-inline: 2rem;
@@ -61,9 +62,10 @@ body{
     align-self: center;
 }
 
-.gameBoard{
+.gameBoard
+{
     font-weight: var(--fw-regular);
-    font-size: var(--fs-xlarge);
+    font-size: var(--fs-xxlarge);
     justify-self: center;
     align-self: center;
     padding: 0.5rem;
@@ -74,19 +76,41 @@ body{
     overflow: hidden;
 }
 
-.boardSpace{
-    aspect-ratio: 1/1;
-    min-width: var(--fs-xlarge);
-    margin-inline: auto;
-    position: relative;
-    display: grid;
-    justify-content: center;
-    align-items: center;
-    
+button{
+    background-color: var(--bg-actColor);
+    border-radius: 5px;
+    width: 100%;
+    font-family: inherit;
+    font-size: var(--fs-large);
+    backdrop-filter: blur(5px);
+    border: 2px solid var(--brdr-color);
+    padding-block: 0.5rem;
 }
 
-.boardSpace::before,
-.boardSpace::after{
+button:hover{
+    scale: 1.1;
+}
+
+button:active{
+    scale: 0.9;
+}
+
+.boardSquare{
+    aspect-ratio: 1/1;
+    min-height: var(--fs-xxlarge);
+    margin-inline: auto;
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+}
+
+.boardSquare:hover{
+    cursor: pointer;
+}
+
+.boardSquare::before,
+.boardSquare::after{
     content: "";
     position: absolute;
     background-color: var(--fc-regular);
@@ -94,19 +118,14 @@ body{
 
 }
 
-img{
-    height: var(--fs-xxlarge);
-    filter: invert();
-}
-
-.boardSpace::after {
+.boardSquare::after {
     inline-size: 100vw;
     block-size: 2px;
     inset-inline-start: -5rem;
     inset-block-start: -1rem;
   }
 
-.boardSpace::before{
+.boardSquare::before{
     inline-size: 2px;
     block-size: 100vh;
     inset-inline-start: -1rem;
