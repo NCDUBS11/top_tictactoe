@@ -27,6 +27,7 @@ let tttGame = (function(){
     const gameBoard = document.querySelector(".gameBoard");
     const startScreen = document.querySelector(".startScreen");
     const gameOverScreen = document.querySelector(".gameOverScreen");
+    const gameOverTxt = document.querySelector(".gameOverTxt");
     // const startBtn = document.querySelector(".startBtn");
     // const gameOverBtn = document.querySelector(".gameOverBtn");
 
@@ -66,7 +67,7 @@ let tttGame = (function(){
     //Ran into issues where boardSpace and gameOver held previous states during testing.
     //Adding refresh to start of new game to ensure a clean start.
     function refresh(){
-        startScreen.style.display = "block";
+        startScreen.style.display = "grid";
         gameOverScreen.style.display = "none";
         gameBoard.style.display = "none";
         // console.clear();
@@ -109,7 +110,7 @@ let tttGame = (function(){
 
     //Verify only a single character is used for a player's token.
     function tokenCheck(player){
-            while(player.token.length != 1){
+            while(player.token.length != 1 || !isNaN(player.token)){
                 console.log(`${player.name}, the token must be a single character`);
                 player.token = prompt(`${player.name}, try choosing your token again.`)
             }
@@ -135,54 +136,73 @@ let tttGame = (function(){
             [4,3,8]
         ];
         let totalTokens = 0;
-        let player1Score = 0;
-        let player2Score = 0;
+        let player1Values = [];
+        let player2Values = [];
 
         for (let i = 0; i < boardSpace.length; i++){
             for (let j = 0; j < boardSpace[i].length; j++){
                 if (boardSpace[i][j] === `[${player_1.token}]`){
-                    player1Score += Number(magicSquare[i][j]);
+                    player1Values.push(Number(magicSquare[i][j]));
                     ++totalTokens;
                 }
                 else if (boardSpace[i][j] === `[${player_2.token}]`){
-                    player2Score += Number(magicSquare[i][j]);
+                    player2Values.push(Number(magicSquare[i][j]));
                     ++totalTokens;
                 } 
             }
         }
-        if (player1Score === 15){
+        if (threeSum(player1Values)){
             console.log(`${player_1.name}, you've won the game. \n Congratulations!`);
             gameBoard.style.display = "none";
-            gameOverScreen.style.display = "block";
-            gameOverScreen.innerText = `${player_1.name}, you've won the game. \n Congratulations!`;
+            gameOverScreen.style.display = "grid";
+            gameOverTxt.innerText = `${player_1.name}, you've won the game. \n Congratulations!`;
             gameOver = true;
         }
-        else if (player2Score === 15){
+        else if (threeSum(player2Values)){
             console.log(`${player_2.name}, you've won the game. \n Congratulations!`);            gameBoard.style.display = "none";
-            gameOverScreen.style.display = "block";
-            gameOverScreen.innerText = `${player_1.name}, you've won the game. \n Congratulations!`;
+            gameOverScreen.style.display = "grid";
+            gameOverTxt.innerText = `${player_2.name}, you've won the game. \n Congratulations!`;
             gameOver = true;
         }
         else if(totalTokens === 9){
             console.log("The game has ended in a draw!");
             gameBoard.style.display = "none";
-            gameOverScreen.style.display = "block";
-            gameOverScreen.innerText = "The game has ended in a draw!";
+            gameOverScreen.style.display = "grid";
+            gameOverTxt.innerText = "The game has ended in a draw!";
             gameOver = true;
         }
         return 1;
     }
 
-    //get player input and validate
-    //**THIS WAS REMOVED. INPUT PROMPTED VIA LISTENERS ON BOARD PIECES**
-    // function promptInput(){
-    //     let input;
+//Credit to Urfan G. at https://dev.to/urfan/leetcode-3sum-with-javascript-4b8j 
+//modified to meet magic number criteria and return true false rather than array
+var threeSum = function(array) {
+    array.sort((a,b) => a - b);
+   const triplets = [];
 
-    //     console.log(`${activePlayer.name}, please enter a location for your token.:`);
-    //     input = Number(prompt(`${activePlayer.name}, where do you want to set a token? (1-9)`));
-    //     validateInput(input);
-    // }
-    //******************************************
+   for(let i=0; i < array.length - 2; i++){
+       if(array[i] != array[i-1]){ // making sure our solution set does not contain duplicate triplets
+           let left = i + 1;
+         let right = array.length - 1;
+
+           while (left < right){
+               const currentSum = array[i] + array[left] + array[right];
+               if (currentSum === 15){
+                   triplets.push([array[i], array[left], array[right]]);
+                   while(array[left] == array[left + 1]) left ++
+                   while(array[right] == array[right - 1]) right -- // making sure our solution set does not contain duplicate triplets
+                   left ++;
+                   right --;
+               } else if(currentSum < 15) {
+                   left ++
+               } else if(currentSum > 15){
+                   right --
+               }
+           }
+       }
+   }
+   return (triplets.length != 0) ? 1 : 0;
+};
 
     //Attempts to match input to a location within boardSpace. If successful
     //the number at the location will be replaced with player token and will return 1.

@@ -62,8 +62,7 @@ body{
     align-self: center;
 }
 
-.gameBoard
-{
+.gameBoard{
     font-weight: var(--fw-regular);
     font-size: var(--fs-xxlarge);
     justify-self: center;
@@ -76,6 +75,14 @@ body{
     overflow: hidden;
 }
 
+.startScreen,
+.gameOverScreen{
+    display: grid;
+    row-gap: var(--fs-regular);
+    text-align: center;
+    text-wrap: balance;
+}
+
 button{
     background-color: var(--bg-actColor);
     border-radius: 5px;
@@ -84,7 +91,6 @@ button{
     font-size: var(--fs-large);
     backdrop-filter: blur(5px);
     border: 2px solid var(--brdr-color);
-    padding-block: 0.5rem;
 }
 
 button:hover{
